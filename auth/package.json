@@ -1,0 +1,34 @@
+{
+  "name": "authservice",
+  "version": "1.0.0",
+  "description": "auth serviec for market place",
+  "homepage": "https://github.com/letsinnovate-code/Backend-microService-#readme",
+  "bugs": {
+    "url": "https://github.com/letsinnovate-code/Backend-microService-/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/letsinnovate-code/Backend-microService-.git"
+  },
+  "license": "ISC",
+  "author": "Anil Patel",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.7.3",
+    "prettier": "^3.9.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
