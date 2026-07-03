@@ -2,6 +2,7 @@ import { compare } from "bcryptjs"
 import {User} from "../models/auth.model.js"
 import {ApiError} from "../utils/api.error.js"
 import {ApiResponse} from "../utils/api.response.js"
+import {nanoid} from "nanoid"
 
 const generateTokens = async(userId)=>{
    try {
@@ -22,11 +23,19 @@ const generateTokens = async(userId)=>{
 
 
 const registerUser = async (req,res)=>{
-    const {username,email,password,phone,firstName,lastName} = req.body
+    const {username,email,password,phone,firstName,lastName,address} = req.body
     
     
 
-    const existingUser = await User.findOne({email})
+    const existingUser = await User.findOne(
+        {
+            $or:[
+                {username},
+                {email},
+                {phone}
+            ]
+        }
+    )
 
     if(existingUser){
         res.status(401).json({
@@ -42,6 +51,7 @@ const registerUser = async (req,res)=>{
         email,
         password,
         phone,
+        address,
         isEmailVerified:false,
         
     })
@@ -65,7 +75,7 @@ const loginUser = async (req,res)=>{
 
     try {
         const user = await User.findOne({email}).select("+password")
-        console.log(user);
+        
         
 
         if(!user){
@@ -98,7 +108,8 @@ const loginUser = async (req,res)=>{
 
   const options = {
     httpOnly: true,
-    secure: true
+    secure: true,
+    
   };
 
   return res
@@ -129,13 +140,38 @@ const loginUser = async (req,res)=>{
 }
 
 const logoutUser = async (req,res)=>{
+    const { _id } = req.user;
+
+  const result = await User.findByIdAndUpdate(
+    _id,
+    {
+      $set: {
+        refreshToken: "",
+      },
+    },
+    {
+      new: true,
+    },
+  );
+
+  //   const options = {
+  //     httpOnly: true,
+  //     secure: process.env.NODE_ENV === "production",
+  //   };
+
+  res
+    .status(200)
+    .clearCookie("accessToken")
+    .clearCookie("refreshToken")
+    .json(new ApiResponse(201, "User logout Successfully!"));
     
 }
 
 const getUser = async (req,res)=>{
-    const {decodedToken} = req.user
+     
    
-    const user = await User.findById(decodedToken._id)
+   try {
+     const user = await User.findById(req.user._id)
 
     console.log(user);
 
@@ -144,9 +180,29 @@ const getUser = async (req,res)=>{
         user
     })
 
+   } catch (error) {
+    throw new ApiError(401,error,"unauthorized access!")
+   }
     
     
     
 }
 
-export { registerUser,loginUser,logoutUser,getUser }
+const userAddress = async(req,res)=>{
+
+    try {
+        const user = await User.findById(req.user._id)
+        if(!user){
+            throw new ApiError(401,"User not logged in , Please login !")
+        }
+        res.status(201).json({
+        success:true,
+        message:"User address found!",
+        address:user.address
+    })
+    } catch (error) {
+        
+    }
+}
+
+export { registerUser,loginUser,logoutUser,getUser,userAddress }

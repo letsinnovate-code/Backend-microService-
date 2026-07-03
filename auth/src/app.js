@@ -3,7 +3,11 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 import healthCheckRouter from "./routes/healthCheck.route.js"
 import authRouter from "./routes/auth.route.js"
+import dotenv from "dotenv"
 
+dotenv.config({
+    path:"./.env"
+})
 const app = express();
 
 app.use(express.json())

@@ -2,6 +2,7 @@ import mongoose,{ Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import { type } from "os";
 
 const userSchema = new Schema(
   {
@@ -74,6 +75,32 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+   address: {
+    id:{
+      type:String
+    },
+  street: {
+    type: String,
+    trim: true,
+  },
+  city: {
+    type: String,
+    trim: true,
+  },
+  state: {
+    type: String,
+    trim: true,
+  },
+  country: {
+    type: String,
+    default: "India",
+    trim: true,
+  },
+  postalCode: {
+    type: String,
+    trim: true,
+  },
+},
 
     emailVerificationToken: String,
 
