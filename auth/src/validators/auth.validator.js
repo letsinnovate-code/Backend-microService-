@@ -50,4 +50,21 @@ const userRegistrationValidator = ()=>{
    
 }
 
-export {userRegistrationValidator}
+
+const userLoginValidator = ()=>{
+    return [
+        body("email")
+        .notEmpty().withMessage("Email can not be empty!")
+        .isEmail().withMessage("Email must be a valid email!")
+        .trim() ,
+
+        body("password")
+        .notEmpty().withMessage("Password can not be empty!")
+        .isString().withMessage("Password must be a string!")
+        .isLength({min:6}).withMessage("Password must be at least 6 characters long!")
+        .isLength({max:20}).withMessage("Password must be at most 20 characters long!")
+        .trim()
+    ]
+}
+
+export {userRegistrationValidator,userLoginValidator}
